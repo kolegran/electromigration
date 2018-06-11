@@ -170,13 +170,13 @@ double rightPartOfEquation(int ai, int aj, int ak) {
 
 // The probability of an exchange of atoms (i, j) per unit time
 double gammaAV(int ai, int aj, int ak, int ni, int nj, int nk) {
-    return NYU_0 * exp(-(E_SADDLE - energyAVBefore(ai, aj, ak, ni, nj, nk) + addElectricField(ai, ni)) / THETA);
+    return NYU_0 * exp(-(E_SADDLE - energyAVBefore(ai, aj, ak, ni, nj, nk) + addElectricField(ai, ni)) / (T*(K_B/E_V)));
 }
 
 
 // The probability of an exchange of atoms (j, i) per unit time
 double gammaVA(int ai, int aj, int ak, int ni, int nj, int nk) {
-    return NYU_0 * exp(-(E_SADDLE - energyVABefore(ai, aj, ak, ni, nj, nk) + addElectricField(ai, ni)) / THETA);
+    return NYU_0 * exp(-(E_SADDLE - energyVABefore(ai, aj, ak, ni, nj, nk) + addElectricField(ai, ni)) / (T*(K_B/E_V)));
 }
 
 
@@ -203,7 +203,7 @@ double bindingEnergy(int xi, int yj, int zk) {
         nk            =     L[xi][yj][zk].nb[k].z;
         neighborsSum += 1 - L[ni][nj][nk].C_old;
     }
-    return V_AA * neighborsSum/THETA;
+    return V_AA/E_V * neighborsSum;
 }
 
 

@@ -24,8 +24,7 @@
 
 #define  T          550                   // The temperature
 
-#define  V_AA      -0.05*E_V              // The interaction energy
-#define  THETA      T*K_B
+#define  V_AA      -0.32e-20              // The interaction energy
 
 #define  STEPS      100                   // Steps for writing a file
 

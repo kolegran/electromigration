@@ -50,4 +50,3 @@ void   checkConservationLaws(double initialSum);                        // For c
 void   fileXYZ(void);                                                   // write data to the file
 
 #endif
-
