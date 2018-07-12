@@ -209,13 +209,13 @@ double bindingEnergy(int xi, int yj, int zk) {
 
 // Add electric field
 double addElectricField(int ax, int ay, int az, int nx) {
-    return (-Z_A * E_CHARGE * E_X*(ax - nx) * A_SPACING/2.0 * L[ax][ay][az].C_old) / E_V;
+    return (-Z_A * E_CHARGE * E_X*(ax - nx) * A_SPACING/2.0) / E_V;
 }
 
 
 // Сheck for substance retention
 void checkConservationLaws(double initialSum) {
-    double epsilon1 = 5e-1;
+    double epsilon1 = 1e-1;
     double epsilon2 = 1e-1;
     double concentrationCurrentSum = 0.0;     // Current sum of concentrations
 
