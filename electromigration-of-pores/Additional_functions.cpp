@@ -30,11 +30,6 @@ void masterEquation(void) {
                 L[x+1][y+1][z  ].C_V = L[x+1][y+1][z  ].C_V_new;
                 L[x+1][y  ][z+1].C_V = L[x+1][y  ][z+1].C_V_new;
                 L[x  ][y+1][z+1].C_V = L[x  ][y+1][z+1].C_V_new;
-
-                L[x  ][y  ][z  ].C_A = L[x  ][y  ][z  ].C_A_new;
-                L[x+1][y+1][z  ].C_A = L[x+1][y+1][z  ].C_A_new;
-                L[x+1][y  ][z+1].C_A = L[x+1][y  ][z+1].C_A_new;
-                L[x  ][y+1][z+1].C_A = L[x  ][y+1][z+1].C_A_new;
             }
         }
     }
@@ -76,8 +71,6 @@ void fileXYZ(void) {
     }
     // Close the file
     fOut.close();
-
-    cout << "file OK" << endl;
 }
 
 
@@ -235,13 +228,129 @@ double addElectricField(int ax, int ay, int az, int nx) {
 }
 
 
+void compensate(void) {
+    int repeat = 0;
+
+    // Backcompenzating sites and surroundings over 1 or under 0
+    for (int x = 0; x < 2*NX; x += 2) {
+        for (int y = 0; y < 2*NY; y += 2) {
+            for (int z = 0; z < 2*NZ; z += 2) {
+                backdistribute(x,   y,   z  );
+                backdistribute(x+1, y+1, z  );
+                backdistribute(x+1, y,   z+1);
+                backdistribute(x,   y+1, z+1);
+            }
+        }
+    }
+
+    // Check range [0; 1]
+    for (int x = 0; x < 2*NX; x += 2) {
+        for (int y = 0; y < 2*NY; y += 2) {
+            for (int z = 0; z < 2*NZ; z += 2) {
+                if (L[x  ][y  ][z  ].C_V < 0 || L[x  ][y  ][z  ].C_V > 1) repeat = 1;
+                if (L[x+1][y+1][z  ].C_V < 0 || L[x+1][y+1][z  ].C_V > 1) repeat = 1;
+                if (L[x+1][y  ][z+1].C_V < 0 || L[x+1][y  ][z+1].C_V > 1) repeat = 1;
+                if (L[x  ][y+1][z+1].C_V < 0 || L[x  ][y+1][z+1].C_V > 1) repeat = 1;
+            }
+        }
+    }
+
+    // Backcompenzating sites and surroundings over 1 or under 0
+    if (repeat == 1) {
+        for (int x = 0; x < 2*NX; x += 2) {
+            for (int y = 0; y < 2*NY; y += 2) {
+                for (int z = 0; z < 2*NZ; z += 2) {
+                    backdistribute(x,   y,   z  );
+                    backdistribute(x+1, y+1, z  );
+                    backdistribute(x+1, y,   z+1);
+                    backdistribute(x,   y+1, z+1);
+                }
+            }
+        }
+        repeat = 0;
+    }
+
+    // Check range [0; 1]
+    for (int x = 0; x < 2*NX; x += 2) {
+        for (int y = 0; y < 2*NY; y += 2) {
+            for (int z = 0; z < 2*NZ; z += 2) {
+                if (L[x  ][y  ][z  ].C_V < 0 || L[x  ][y  ][z  ].C_V > 1) repeat = 1;
+                if (L[x+1][y+1][z  ].C_V < 0 || L[x+1][y+1][z  ].C_V > 1) repeat = 1;
+                if (L[x+1][y  ][z+1].C_V < 0 || L[x+1][y  ][z+1].C_V > 1) repeat = 1;
+                if (L[x  ][y+1][z+1].C_V < 0 || L[x  ][y+1][z+1].C_V > 1) repeat = 1;
+                if (repeat == 1) {
+                    cout << "WARNING: out of range after double backdistributing" << endl;
+                    cout << "C = " << L[x][y+1][z+1].C_V << endl;
+                    repeat = 0;
+                }
+            }
+        }
+    }
+}
+
+
+// Redistribution of concentration near neighbors
+void backdistribute(int x, int y, int z) {
+    double sum, diff, d_comp;
+    int ni, nj, nk;
+
+    if (L[x][y][z].C_V < 0.0) {
+        sum = 0;
+        for (int k = 0; k < Z ; k++) {
+            ni = L[x][y][z].nb[k].x;
+            nj = L[x][y][z].nb[k].y;
+            nk = L[x][y][z].nb[k].z;
+            sum += L[ni][nj][nk].C_V;
+        }
+
+        diff = L[x][y][z].C_V;
+        L[x][y][z].C_V = 0.0;
+        L[x][y][z].C_A = 1.0;
+
+        for (int k = 0; k < Z ; k++) {
+            ni = L[x][y][z].nb[k].x;
+            nj = L[x][y][z].nb[k].y;
+            nk = L[x][y][z].nb[k].z;
+
+            d_comp = diff * L[ni][nj][nk].C_V/sum;
+            L[ni][nj][nk].C_V += d_comp;
+            L[ni][nj][nk].C_A = 1 - L[ni][nj][nk].C_V;
+        }
+
+    } else if (L[x][y][z].C_V > 1.0) {
+        sum = 0;
+        for (int k = 0; k < Z ; k++) {
+            ni = L[x][y][z].nb[k].x;
+            nj = L[x][y][z].nb[k].y;
+            nk = L[x][y][z].nb[k].z;
+            sum += L[ni][nj][nk].C_V;
+        }
+
+        diff = L[x][y][z].C_V - 1.0;
+        L[x][y][z].C_V = 1.0;
+        L[x][y][z].C_A = 0.0;
+
+        for (int k = 0; k < Z ; k++) {
+            ni = L[x][y][z].nb[k].x;
+            nj = L[x][y][z].nb[k].y;
+            nk = L[x][y][z].nb[k].z;
+
+            d_comp = diff * (1 - L[ni][nj][nk].C_V)/(Z - sum);
+            L[ni][nj][nk].C_V += d_comp;
+            L[ni][nj][nk].C_A = 1 - L[ni][nj][nk].C_V;
+        }
+    }
+}
+
+
 // Сheck for substance retention
 void checkConservationLaws(double initialSumC_A, double initialSumC_V) {
     double epsilon1 = 1e-1;
     double epsilon2 = 1e-1;
     double currentSumC_A = 0.0;     // Current sum of concentration C_A
     double currentSumC_V = 0.0;     // Current sum of concentration C_V
-
+    
+    
     // Calculate current sum of concentrations (C_A, C_B)
     for (int x = 0; x < 2*NX; x++) {
         for (int y = 0; y < 2*NY; y++) {
@@ -271,7 +380,7 @@ void checkConservationLaws(double initialSumC_A, double initialSumC_V) {
         cin.get();
         exit(0);
     }
-
+    
     // 0 > concentration > 1
     for (int x = 0; x < 2*NX; x++) {
         for (int y = 0; y < 2*NY; y++) {

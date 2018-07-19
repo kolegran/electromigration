@@ -28,7 +28,6 @@ typedef struct GRAYATOM {
     int numnb;              // The number of neighbors
 } Grayatom;
 
-                                                                            // ---function prototypes
 double randomNumber(void);                                                  // Generation of a random number [0; 1]
 void   neighboursOfAtomPBC(int x, int y, int z);                            // Memorizing the neighbors of each atom with periodic boundary conditions
 void   latticeInitialization(void);                                         // Lattice initialization
@@ -49,5 +48,8 @@ void   calcInitialSum(double *initSumC_A, double *initSumC_V);
 void   checkConservationLaws(double initialSumC_A, double initialSum_C_V);  // For check conservation laws
 
 void   fileXYZ(void);                                                       // Write data to the file
+
+void   compensate(void);                                                    // Recompensation of concentration in the case of out of range [0; 1]
+void   backdistribute(int x, int y, int z);                                 // Backdistribute of concentration in the case of out of range [0; 1]
 
 #endif
