@@ -2,9 +2,9 @@
 #define CONSTANTS_HPP
 
 // Structure dimensions
-#define  NX         30
-#define  NY         30
-#define  NZ         1
+#define  NX         20
+#define  NY         20
+#define  NZ         15
 
 #define  Z          12                    // The number of coordination sphere
 
@@ -21,6 +21,12 @@
 
 #define  E_CHARGE   1.60217656535e-19     // The electron charge
 #define  A_SPACING  2.5e-10               // The lattice (atomic) spacing (A----B)
+
+#define  U          1.0e+8*A_SPACING*NX   // U ~ E*d ~ 1e+8 * NX * a ~ 2.5e-2 * NX
+#define  C_SIGMA    1.0e+7                // Electrical conductivity (c - constant)
+#define  PHI_LEFT  -U/2.0
+#define  PHI_RIGHT  U/2.0
+#define  EPS        1.0e-3
 
 #define  T          550                   // The temperature
 

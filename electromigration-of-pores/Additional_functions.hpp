@@ -24,12 +24,14 @@ typedef struct Nbatom {
 typedef struct GRAYATOM {
     double C_A, C_A_new;
     double C_V, C_V_new;
+    double phiOld, phiNew;
     Nbatom nb[Z];           // Coordinates of neighboring atoms
     int numnb;              // The number of neighbors
 } Grayatom;
 
-double randomNumber(void);                                                  // Generation of a random number [0; 1]
-void   neighboursOfAtomPBC(int x, int y, int z);                            // Memorizing the neighbors of each atom with periodic boundary conditions
+double randomNumber(void);                                                  // Generation of a random number (0; 1)
+void   neighborsOfAtomPBC(int x, int y, int z);                             // Memorizing the neighbors of each atom with periodic boundary conditions
+void   zeroConcentrations(void);                                            // Zeroing of concentrations on the faces
 void   latticeInitialization(void);                                         // Lattice initialization
 
 void   masterEquation(void);
@@ -42,8 +44,6 @@ double energyAVBefore(int ai, int aj, int ak, int ni, int nj, int nk);      // S
 double energyVABefore(int ai, int aj, int ak, int ni, int nj, int nk);      // Sum of binding energies
 double bindingEnergy(int xi, int yj, int zk);                               // Binding energy A-B (B-A)
 
-double addElectricField(int ax, int ay, int az, int nx);                    // Add electric field
-
 void   calcInitialSum(double *initSumC_A, double *initSumC_V);
 void   checkConservationLaws(double initialSumC_A, double initialSum_C_V);  // For check conservation laws
 
@@ -51,5 +51,10 @@ void   fileXYZ(void);                                                       // W
 
 void   compensate(void);                                                    // Recompensation of concentration in the case of out of range [0; 1]
 void   backdistribute(int x, int y, int z);                                 // Backdistribute of concentration in the case of out of range [0; 1]
+
+double addElectricField(int ax, int ay, int az, int nx);                    // Add electric field
+double calculationSigma(int ax, int ay, int az);
+bool   checkSumCondition(void);
+void   calculationPotential(void);
 
 #endif
