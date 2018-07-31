@@ -52,7 +52,7 @@ void   fileXYZ(void);                                                       // W
 void   compensate(void);                                                    // Recompensation of concentration in the case of out of range [0; 1]
 void   backdistribute(int x, int y, int z);                                 // Backdistribute of concentration in the case of out of range [0; 1]
 
-double addElectricField(int ax, int ay, int az, int nx);                    // Add electric field
+double addElectricField(int ax, int ay, int az, int nx, int ny, int nz);    // Add electric field
 double calculationSigma(int ax, int ay, int az);
 bool   checkSumCondition(void);
 void   calculationPotential(void);

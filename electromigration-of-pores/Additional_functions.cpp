@@ -258,13 +258,13 @@ double rightPartOfEquation(int ai, int aj, int ak) {
 
 // The probability of an exchange of atoms (i, j) per unit time
 double gammaAV(int ai, int aj, int ak, int ni, int nj, int nk) {
-    return NYU_0 * exp(-(E_SADDLE - energyAVBefore(ai, aj, ak, ni, nj, nk) /*+ addElectricField(ai, aj, ak, ni)*/) / (T*(K_B/E_V)));
+    return NYU_0 * exp(-(E_SADDLE - energyAVBefore(ai, aj, ak, ni, nj, nk) + addElectricField(ai, aj, ak, ni, nj, nk)) / (T*(K_B/E_V)));
 }
 
 
 // The probability of an exchange of atoms (j, i) per unit time
 double gammaVA(int ai, int aj, int ak, int ni, int nj, int nk) {
-    return NYU_0 * exp(-(E_SADDLE - energyVABefore(ai, aj, ak, ni, nj, nk) /*+ addElectricField(ai, aj, ak, ni)*/) / (T*(K_B/E_V)));
+    return NYU_0 * exp(-(E_SADDLE - energyVABefore(ai, aj, ak, ni, nj, nk) + addElectricField(ai, aj, ak, ni, nj, nk)) / (T*(K_B/E_V)));
 }
 
 
