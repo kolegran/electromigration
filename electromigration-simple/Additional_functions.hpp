@@ -42,7 +42,7 @@ double energyAVBefore(int ai, int aj, int ak, int ni, int nj, int nk);  // Sum o
 double energyVABefore(int ai, int aj, int ak, int ni, int nj, int nk);  // Sum of binding energies
 double bindingEnergy(int xi, int yj, int zk);                           // Binding energy A-B (B-A)
 
-double addElectricField(int ax, int ay, int az, int nx);                // Add electric field
+double addElectricField(int ax, int nx);                                // Add electric field
 
 double calcInitialSum(void);                         
 void   checkConservationLaws(double initialSum);                        // For check conservation laws
