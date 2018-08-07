@@ -10,7 +10,9 @@ int main(void) {
 
     srand(time(nullptr));
 
-    latticeInitialization();
+    //latticeInitialization();
+
+    initFromFile();
 
     calcInitialSum(&initialSumC_A, &initialSumC_V);
 

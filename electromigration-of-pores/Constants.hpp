@@ -2,9 +2,9 @@
 #define CONSTANTS_HPP
 
 // Structure dimensions
-#define  NX         20
-#define  NY         20
-#define  NZ         15
+#define  NX         30
+#define  NY         30
+#define  NZ         30
 
 #define  Z          12                    // The number of coordination sphere
 
